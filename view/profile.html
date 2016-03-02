@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+    <title>Users Module</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <body>
+        <button id="delete">Delete Profile</button><br><br>
+
+     
+        <div id="wrapper" style="text-align:center; border:1px solid;">
+       
+            <h3>Your Profile</h3>
+            <img id="profpic" src="../profpics/profile.png" height= "300px" width="300px" >
+            <form id='myForm'>
+            <input type='file' id='myfiles' multiple/>
+            <button id='upload'>Upload</button>
+            </form>    
+            <div id="profile" >  </div>
+            <button id="update">Edit Username</button> 
+        </div>
+<script>
+    $(document).ready(function(){
+    var profpic = document.getElementById("profpic");
+    profpic.src = "../profpics/2avatar.jpg";    
+        
+    var myfiles = document.getElementById("myfiles");
+    var upload = document.getElementById("upload");
+    
+    upload.onclick = function(e){
+        e.preventDefault();
+        
+        var formData = new FormData();
+        
+        var allFiles = myfiles.files;
+        
+        for(var i = 0; i<allFiles.length; i++){
+            var file = allFiles[i];
+            
+            if(file.type.match("image/*")){
+                //this gets stored in the FILES container
+                formData.append("images[]", file, "whatever");
+
+                //stored in the POST or GET container
+                formData.append("userid", 2);
+            } else {
+                alert("IMAGE ONLY!");
+                return false;
+            }
+            
+            
+        }
+        
+        var xhr = new XMLHttpRequest();
+        
+        xhr.open("POST", "upload.php", true);
+        
+        xhr.onload = function(){
+            if(xhr.status == 200){
+                alert("Loaded upload.php successfully");
+            }
+            if(xhr.status == 404){
+                alert("PAGE NOT FOUND!!");
+            }
+        }
+        
+        xhr.send(formData);
+        console.log(myfiles.files);
+    }
+        console.log(sessionStorage.myid);
+        var id = sessionStorage.myid;
+        var nameHead = document.createElement('h3');
+        $.ajax({
+            url:"../controller/usercont.php",
+            dataType:"JSON",
+            type:"POST",
+            data:{
+                method:"getUser",
+                id:id
+            },
+            success:function(resp){
+                console.log(resp);
+                
+                nameHead.innerHTML = resp[0].username;
+                document.getElementById("profile").appendChild(nameHead);
+            }
+        })
+   
+        var deleteBut = document.getElementById("delete");
+        deleteBut.onclick = function(){
+            $.ajax({
+                url:"../controller/usercont.php",
+                dataType:"html",
+                type:"POST",
+                data:{
+                    method:"delete",
+                    username:document.getElementById("username").value
+                },
+                success:function(resp){
+                    alert("Account deleted");
+                }
+            });
+        }
+        
+//        var readBut = document.getElementById("read");
+//        var showUsers = document.getElementById("showUsers");
+//        readBut.onclick = function(){
+//            $.ajax({
+//                url:"../controller/usercont.php",
+//                dataType:"json",
+//                type:"POST",
+//                data:{
+//                    method:"read"
+//                },
+//                success:function(resp){
+//                    console.log(resp);
+//                    for(i=0;i<resp.length;i++){
+//                        var cont = document.createElement("div");
+//                        cont.innerHTML = resp[i].username;
+//                        showUsers.appendChild(cont);
+//                    }
+//                }
+//            });
+//        }
+        
+        var updateBut = document.getElementById("update");
+        var updateNum = 0;
+        updateBut.onclick = function(){
+            
+            if(updateNum == 0) {
+            
+                var update = document.createElement("input");
+                document.getElementById("profile").appendChild(update);
+                update.id = "newUsername";
+                update.placeholder = "New Username";
+                updateNum++;
+                updateBut.innerHTML = "update";
+            } else if(updateNum == 1){
+            
+            $.ajax({
+                url:"../controller/usercont.php",
+                dataType:"html",
+                type:"POST",
+                data:{
+                    method:"update",
+                    newname:document.getElementById("newUsername").value,
+                    id:id
+                },
+                success:function(resp){
+                    alert("Account updated"); 
+                   
+                }
+            });
+            nameHead.innerHTML = document.getElementById("newUsername").value;
+            updateBut.innerHTML = "edit";
+            document.getElementById("profile").removeChild(document.getElementById("newUsername"));
+            }
+        }
+        
+        }); 
+</script>
+    </body>
+</html>

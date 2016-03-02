@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Item Cart</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <style>
+        .input{
+            height: 25px;
+            width: 200px;  
+        }    
+        
+        .button{
+            width:120px; 
+            height:30px;
+        }
+        
+        
+    </style>
+    </head>
+    
+<body>
+<div id="div" style="position: relative; width: 400px; height: 600px; border: 1px solid black;">
+    <div id="center" style="width: 90%; margin: 0 auto; text-align: center">
+        <h3 id="title">F150 Heavy Duty V8 Engine</h3>
+       
+ 
+        <p id="para">I have my F150 SuperCab pickup available this saturday from 1pm to 4pm. She can tow up 7,300kg but can do 7000kg no problem. I recently injured my back though, so I unfortunately can't do much of the heavy lifting. Cheers</p>
+        <br><br>
+        <img id="img" src="http://www.automotive-fleet.com/fc_images/news/m-f150-rouge-02.jpg" style="width: 300px; height: 200px;">
+        
+        
+        <p> Posted by: <a href="">John Smith</a></p>
+        <p id="num"> Call at: 250-748-0788</p>
+        
+        <button id="edit" class="button">Edit This Ad</button>
+    </div>
+</div>
+    
+
+    
+    
+    
+<script>
+    
+$(document).ready(function(){    
+    
+var edit = document.getElementById("edit"); 
+    
+edit.onclick = function(){
+
+    var OK = document.createElement("button");
+    OK.innerHTML = "Done";
+    OK.classList.add("button");
+    OK.id = "OK";
+    edit.appendChild(OK);
+    //edit.appendChild(OK);
+    var div = document.getElementById("center");
+    div.appendChild(OK);
+    //edit.style.visibility = "hidden";
+    
+    var title = document.getElementById("title");
+    var title2 = document.getElementById("title").innerHTML;
+    
+    var desc = document.getElementById("para");
+    var desc2 = document.getElementById("para").innerHTML;
+    
+    var img = document.getElementById("img");
+    var img2 = document.getElementById("img").innerHTML;
+
+        var input = document.createElement("input");
+        input.id = "input";
+        input.value = title2;
+        input.classList.add("input");
+        title.innerHTML = "";
+        title.appendChild(input);
+   
+        document.getElementById("input").focus();
+        //var newtitle = document.getElementById("input").value;
+        
+    ////// DESC INPUT /////
+        var input2 = document.createElement("input");
+        input2.id = "input2";
+        input2.value = desc2;
+        input2.classList.add("input");
+        para.innerHTML = "";
+        para.appendChild(input2);
+
+        document.getElementById("input2").focus();
+        //var newdesc = document.getElementById("input2").value;
+      
+    
+    ////// NEW IMAGE INPUT //////
+     /*   var input3 = document.createElement("input");
+        input3.id = "input";
+        input3.value = img2;
+        input3.classList.add("input");
+        img.innerHTML = "";
+        img.appendChild(input3);
+      
+        input3.id = "input3";
+       
+        document.getElementById("input3").focus();
+        //var newimg = document.getElementById("input3").value;
+    
+*/
+
+    var OK = document.getElementById("OK");
+    OK.onclick = function(){
+        var newtitle = input.value;
+        var newdesc = input2.value;
+        //var newimg = input3.value;
+        console.log(newtitle);
+   
+          $.ajax({
+                    url:"../controller/item.php",
+                    dataType:"html",
+                    type:"POST",
+                    data:{
+                        method:"update",
+                        title:newtitle,
+                        description:newdesc,
+                    },
+                    success:function(resp){
+                        alert("USER Logged in!");
+                        console.log(resp);
+                        
+                    }
+                });
+      
+        title.removeChild(input);
+        title.innerHTML = newtitle;
+        title.value = newtitle;
+        
+        desc.removeChild(input2);
+        desc.innerHTML = newdesc;
+        desc.value = newdesc;
+       /* 
+       img.removeChild(input3);
+       img.innerHTML = newimg;
+       img.value = newimg;
+    */
+        div.removeChild(OK);
+       
+        
+    }
+   
+        
+    
+}
+
+    
+
+
+});
+
+    
+ 
+</script> 
+    
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+    <title>Users Module</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <body>
+        <input type="text" id="username" placeholder="username">
+        <input type="password" id="password" placeholder="password">
+        <button id="create">Register</button>
+        <div id="showUsers"></div>
+        
+        <div style="float:right;">
+            <input type="text" id="usernameL" placeholder="username">
+            <input type="password" id="passwordL" placeholder="password">
+            <button id="login">login</button>
+        </div>
+        
+        <a href="./profile.html" id="profile">Go to my Profile</a>
+        <a href="./allPosts.php" id="allPosts">See all posts</a>
+        <a href="./NewPost.html" id="newPosts">Make a Post!</a>        
+
+<script>
+    $(document).ready(function(){
+        
+        var createBut = document.getElementById("create");
+        createBut.onclick = function(){
+            $.ajax({
+            url:"../controller/usercont.php",
+            dataType:"html",
+            type:"POST",
+            data:{
+                method:"create",
+                username:document.getElementById("username").value,
+                password:document.getElementById("password").value
+            },
+            success:function(resp){
+                alert("USER CREATED!");
+            }   
+            });
+        }
+        
+        var loginBut = document.getElementById("login");
+        loginBut.onclick = function(){
+            $.ajax({
+                url:"../controller/usercont.php",
+                dataType:"json",
+                type:"POST",
+                data:{
+                    method:"login",
+                    username:document.getElementById("usernameL").value,
+                    password:document.getElementById("passwordL").value
+                },
+                success:function(resp){
+                    alert("You are logged in");
+                    console.log(resp);
+                    sessionStorage.myid = resp[0].id;
+                }   
+            });
+        }
+        
+        var profileBut = document.getElementById("profile");
+        
+        profileBut.onclick = function(){
+           $.ajax({
+                url:"../controller/usercont.php",
+                dataType:"json",
+                type:"POST",
+                data:{
+                    method:"getUser",
+                    id:sessionStorage.myid
+                
+                },
+                success:function(resp){
+                    alert("You are logged in");
+                    console.log(resp);
+                 
+                }   
+            });            
+            
+        }
+        }); 
+</script>
+    </body>
+</html>

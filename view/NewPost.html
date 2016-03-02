@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Item Cart</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <style>
+        .input{
+            height: 25px;
+            width: 200px;  
+        }    
+        
+        .button{
+            width:120px; 
+            height:30px;
+        }
+        
+        
+    </style>
+    </head>
+    
+<body>
+<div id="div" style="position: relative; width: 400px; height: 600px; border: 1px solid black;">
+    <div id="center" style="width: 90%; margin: 0 auto; text-align: center">
+        <h2 id="title">Create A New Posting!</h2>
+       
+        <button id="add" class="button">Create!</button>
+    </div>
+</div>
+    
+    
+<script>
+$(document).ready(function(){    
+    
+    var add = document.getElementById("add");
+    add.onclick = function(){
+        
+        var TT = document.createElement("h4");
+        var DT = document.createElement("h4");
+        var IT = document.createElement("h4");
+        var button = document.createElement("button");
+        
+        var title = document.createElement("input");
+        title.classList.add("input");
+        //title.id = "title";
+        
+        var desc = document.createElement("input");
+        desc.classList.add("input");
+        //desc.id = "desc";
+        
+        var img = document.createElement("input");
+        img.classList.add("input");
+        //img.id = "img";
+        
+        
+        var div = document.getElementById("center");
+        div.appendChild(TT);
+        div.appendChild(title);
+        div.appendChild(DT);
+        div.appendChild(desc);
+        div.appendChild(IT);
+        div.appendChild(img);
+        div.appendChild(button);
+        
+        TT.innerHTML = "Title:";
+        DT.innerHTML = "Description:";
+        IT.innerHTML = "Image URL:";
+        
+        button.classList.add("button");
+        button.id = "pub";
+        button.innerHTML = "Publish!";
+
+        var pub = document.getElementById("pub");
+        pub.onclick = function(){
+            var titleVal = title.value;
+            var descVal = desc.value;
+            var imgVal = img.value;
+            console.log(titleVal);
+        
+
+                $.ajax({
+                    url: "../controller/item.php",
+                    type: "POST",
+                    dataType: "html",
+                    data: {
+                        method: "create",
+                        title:titleVal,
+                        desc:descVal,
+                        img:imgVal,
+
+                    },
+                    success:function(resp){
+                        console.log(resp);
+                        alert("New Post Sent!");
+                        location.href = "allPosts.php";
+                    }
+                });
+
+        }
+
+    }
+});
+    
+</script>    
+    
+</body>
+</html>
+
+    
